@@ -1,2 +1,2 @@
 # weyek-heart
-heart.weyek.com
+heart.weyek.cn

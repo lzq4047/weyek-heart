@@ -1,0 +1,147 @@
+<!--
+ * @Author: Lu Zhiqiang
+ * @Date: 2020-12-24 20:30:14
+ * @LastEditTime: 2020-12-24 22:00:57
+ * @LastEditors: Lu Zhiqiang
+ * @Description: Heart
+ * @FilePath: \weyek-heart\index.html
+ * @heart.weyek.cn
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Weyek!</title>
+    <style>
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #app {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #000000;
+            color: #999900;
+            font-size: 1vw;
+        }
+        @font-face {
+            font-family: MonkeyGeek;
+            src: url("./fonts/Monkey-Geek.otf") format('opentype'),
+                url("./fonts/Monkey-Geek.ttf") format('truetype');
+        }
+        /* Timer */
+        .timer {
+            display: inline-flex;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            font-size: 2.8vw;
+            font-weight: bold;
+            pointer-events: none;
+            color: #990033;
+        }
+        .timer-part + .timer-part {
+            margin-left: 2vw;
+        }
+        .timer-units {
+            color: #999900;
+            font-family: MonkeyGeek;
+        }
+        .timer-part.day {
+            font-size: 4.2vw;
+            font-weight: bolder;
+        }
+
+        /* Notes */
+        .notes {
+            margin-top: 2vw;
+            color: hsl(50, 100%, 10%);
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="timer">
+            <div class="timer-part day">
+                <span class="timer-value" id="day">----</span>
+                <span class="timer-units">Days</span>
+            </div>
+            <div class="timer-part hour">
+                <span class="timer-value" id="hour">--</span>
+                <span class="timer-units">Hours</span>
+            </div>
+            <div class="timer-part minute">
+                <span class="timer-value" id="minute">--</span>
+                <span class="timer-units">Minutes</span>
+            </div>
+            <div class="timer-part second">
+                <span class="timer-value" id="second">--</span>
+                <span class="timer-units">Seconds</span>
+            </div>
+        </div>
+        <div class="notes">
+            From <span id="from">----</span>
+        </div>
+    </div>
+
+    <!-- Libs -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.9.6/dayjs.min.js"></script>
+    
+    <script>
+        /**
+         * compelete single digit as double.
+         */
+        function compeleteZero(v) {
+            return v.toString().replace(/^(\d)$/, '0$1');
+        }
+        function numberFormat(n) {
+            return n.toString().replace(/\d{1,3}(?=(\d{3})+(\.|$))/g,'$&,');
+        }
+        const config = {
+            dateFrom: '2018-04-29 12:00:00',
+            timerDuration: 1000,
+        };
+        const elDay = document.querySelector('#day');
+        const elHour = document.querySelector('#hour');
+        const elMinute = document.querySelector('#minute');
+        const elSecond = document.querySelector('#second');
+        const dayjsFrom = dayjs(config.dateFrom);
+        function timerCallback() {
+            const now = dayjs();
+            const durationDays = now.diff(dayjsFrom, 'day');
+            const durationHours = now.clone()
+                .subtract(durationDays, 'day')
+                .diff(dayjsFrom, 'hour');
+            const durationMinutes = now.clone()
+                .subtract(durationDays, 'day')
+                .subtract(durationHours, 'hour')
+                .diff(dayjsFrom, 'minute');
+            const durationSeconds = now.clone()
+                .subtract(durationDays, 'day')
+                .subtract(durationHours, 'hour')
+                .subtract(durationMinutes, 'minute')
+                .diff(dayjsFrom, 'second');
+            elDay.innerText = numberFormat(durationDays);
+            elHour.innerText = compeleteZero(durationHours);
+            elMinute.innerText = compeleteZero(durationMinutes);
+            elSecond.innerText = compeleteZero(durationSeconds);
+        }
+
+        /**
+         * set from note
+         */
+        function setFromNotes() {
+            const elFrom = document.querySelector('#from');
+            from.innerText = config.dateFrom;
+        }
+        setFromNotes();
+        const timer = setInterval(timerCallback, 1000);
+    </script>
+</body>
+</html>
