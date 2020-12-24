@@ -1,0 +1,8 @@
+version: '3'
+services:
+  nginx-heart:
+    image: nginx-heart
+    ports:
+      - 18430:80
+    volumes:
+      - ./config/nginx/heart.nginx.conf:/etc/nginx/nginx.conf

@@ -1,16 +1,7 @@
-FROM node
-# set npm registry
-RUN ["npm", "set", "registry", "https://registry.npm.taobao.org/"]
-
-# install http-server globally
-RUN ["npm", "install", "-g", "http-server"]
+FROM nginx
 
 # copy files
-COPY fonts /root/app/heart/fonts
-COPY index.html /root/app/heart/index.html
+COPY fonts /usr/share/nginx/html/fonts
+COPY index.html /usr/share/nginx/html/index.html
 
-# set work directory
-WORKDIR /root/app/heart
-
-# start server at port 8080
-CMD ["hs", "-p 8080"]
+COPY config/nginx/heart.nginx.conf /etc/nginx/nginx.conf
